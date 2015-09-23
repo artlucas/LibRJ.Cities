@@ -43,6 +43,7 @@ namespace LibRJ.Cities.Models
         [StringLength(200)]
         public string Name { get; set; }
 
+        public int CountryID { get; set; }
         public ICollection<City> Cities { get; set; }
     }
 }

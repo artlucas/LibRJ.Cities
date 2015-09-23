@@ -36,7 +36,7 @@ namespace LibRJ.Cities.Models
 {
     public abstract class GeoNameResource
     {
-        public int GeoNameID { get; set; }
+        public int? GeoNameID { get; set; }
     }
 }
 

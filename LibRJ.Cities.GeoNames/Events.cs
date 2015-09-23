@@ -31,38 +31,18 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 using System;
-using System.Data.Entity;
-using FileHelpers;
-using LibRJ.Cities.Models;
-using SourceModels = LibRJ.Cities.GeoNames.SourceModels;
 
 namespace LibRJ.Cities.GeoNames
 {
-    public class CountryImport
+    public delegate void GeoNamesImportingEventHandler(object sender, EventArgs e);
+
+    public class GeoNamesImportingEventArgs : EventArgs
     {
-        private FileHelperEngine<SourceModels.Country> engine = null;
-        private IWebClientFactory webClientFactory = null;
+        public bool IsNewRecord { get; set; }
+        public GeoNamesRecordType RecordType { get; set; }
+        public object IncomingRecord { get; set; }
 
-        public CountryImport(IWebClientFactory webClientFactory=null)
-        {
-            this.engine = new FileHelperEngine<SourceModels.Country>();
-            this.webClientFactory = webClientFactory != null 
-                ? webClientFactory 
-                : (IWebClientFactory)new WebClientFactory();
-        }
-
-        public async void SyncCountries(IDbSet<Country> countrySet)
-        {
-            var entity = new Country()
-            {
-                Name = "Test Country",
-                Continent = "NA",
-                ISO_A2 = "XX",
-                ISO_A3 = "XXX",
-                GeoNameID = 1234
-            };
-
-            countrySet.Add(entity);
+        public GeoNamesImportingEventArgs() : base() {
         }
     }
 }

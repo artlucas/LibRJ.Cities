@@ -4,7 +4,7 @@
 // |____|_|_.__/_|_\\__(_)___|_|\__|_\___/__/
 //
 // Author:
-//   Arthur Lucas <arthur@remitjet.com>
+//   arthur <>
 //
 // Copyright (c) 2015, Remit Jet, Ltd. All rights reserved.
 //
@@ -29,34 +29,61 @@
 // LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+//
 using System;
+using System.Linq;
 using FileHelpers;
+using System.Configuration;
+using LibRJ.Cities.Models;
+using System.Data.Entity;
 
-namespace LibRJ.Cities.GeoNames.SourceModels
+namespace LibRJ.Cities.GeoNames
 {
-    [DelimitedRecord("\t")]
-    public class Country
+    public class GeoNamesCountryFeatureImport : GeoNamesImportBase
     {
-        public string ISO_A2 { get; set; }
-        public string ISO_A3 { get; set; }
-        public string ISO_Numeric { get; set; }
-        public string Fips { get; set; }
-        public string CountryName { get; set; }
-        public string CapitalCityName { get; set; }
-        public string AreaSqKm { get; set; }
-        public string Population { get; set; }
-        public string ContinentCode { get; set; }
-        public string CCTLD { get; set; }
-        public string CurrencyCode { get; set; }
-        public string CurrencyName { get; set; }
-        public string DialingCode { get; set; }
-        public string PostalCodeFormat { get; set; }
-        public string PostalCodeRegex { get; set; }
-        public string Locales { get; set; }
-        public int? GeoNameID { get; set; } // Some entries do not have one -- ie: Serbia
-        public string Neighbours_A2 { get; set; }
-        public string EquivalentFipsCode { get; set; }
+        public const string DefaultImportURL = "http://download.geonames.org/export/dump/$$.zip";
+
+        private FileHelperEngine<SourceModels.Country> engine;
+        private IWebClientFactory webClientFactory;
+        private Uri importURL;
+
+        public GeoNamesCountryFeatureImport(IWebClientFactory webClientFactory=null, Uri importURL=null)
+        {
+            this.engine = new FileHelperEngine<SourceModels.Country>();
+
+            this.importURL = importURL ?? new Uri(
+                ConfigurationManager.AppSettings["GeoNamesCountryFeatureImport:ImportURI"]
+                ?? DefaultImportURL
+            );
+
+            this.webClientFactory = webClientFactory ?? (IWebClientFactory)new WebClientFactory();
+        }
+
+        public Region TranslateToRegion(SourceModels.CountryFeature source, Country country)
+        {
+            if (source.FeatureCode != "ADM1")
+                return null;
+            
+            var record = new Region();
+
+            record.Name = source.Name;
+            record.CountryID = country.ID;
+
+            return record;
+        }
+
+        public Region TranslateToCity(SourceModels.CountryFeature source, Region region)
+        {
+            if (source.FeatureCode != "PPL")
+                return null;
+
+            var record = new City();
+
+            record.Name = source.Name;
+            record.CountryID = country.ID;
+
+            return record;
+        }
     }
 }
 

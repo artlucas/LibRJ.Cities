@@ -41,15 +41,35 @@ namespace LibRJ.Cities.Models
         public int ID { get; set; }
 
         [StringLength(200)]
+        [Required]
         public string Name { get; set; }
 
         [StringLength(2)]
+        [Required]
         public string ISO_A2 { get; set; }
 
         [StringLength(3)]
+        [Required]
         public string ISO_A3 { get; set; }
 
+        [StringLength(3)]
+        [Required]
+        public string ISO_Numeric { get; set; }
+
+        [StringLength(3)]
+        public string CurrencyCode { get; set; }
+
+//        [StringLength(10)] -- Needs to be child table, some countries have > 1
+//        public string DialingCode { get; set; }
+
+        [StringLength(20)]
+        public string PostalCodeFormat { get; set; }
+
+        [StringLength(200)]
+        public string PostalCodeRegex { get; set; }
+
         [StringLength(2)]
+        [Required]
         public string Continent { get; set; }
 
         public ICollection<Region> Regions { get; set; }

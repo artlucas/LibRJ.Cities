@@ -4,7 +4,7 @@
 // |____|_|_.__/_|_\\__(_)___|_|\__|_\___/__/
 //
 // Author:
-//   Arthur Lucas <arthur@remitjet.com>
+//   arthur <>
 //
 // Copyright (c) 2015, Remit Jet, Ltd. All rights reserved.
 //
@@ -29,34 +29,37 @@
 // LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+//
 using System;
-using FileHelpers;
 
-namespace LibRJ.Cities.GeoNames.SourceModels
+namespace LibRJ.Cities.GeoNames
 {
-    [DelimitedRecord("\t")]
-    public class Country
+    public class GeoNamesImportBase
     {
-        public string ISO_A2 { get; set; }
-        public string ISO_A3 { get; set; }
-        public string ISO_Numeric { get; set; }
-        public string Fips { get; set; }
-        public string CountryName { get; set; }
-        public string CapitalCityName { get; set; }
-        public string AreaSqKm { get; set; }
-        public string Population { get; set; }
-        public string ContinentCode { get; set; }
-        public string CCTLD { get; set; }
-        public string CurrencyCode { get; set; }
-        public string CurrencyName { get; set; }
-        public string DialingCode { get; set; }
-        public string PostalCodeFormat { get; set; }
-        public string PostalCodeRegex { get; set; }
-        public string Locales { get; set; }
-        public int? GeoNameID { get; set; } // Some entries do not have one -- ie: Serbia
-        public string Neighbours_A2 { get; set; }
-        public string EquivalentFipsCode { get; set; }
+        public event GeoNamesImportingEventHandler Importing;
+
+        protected virtual bool OnImporting(bool isNewRecord, GeoNamesRecordType recordType, object incomingRecord)
+        {
+            if (this.Importing != null)
+                this.Importing(this, new GeoNamesImportingEventArgs() { 
+                    IsNewRecord = isNewRecord,
+                    RecordType = recordType,
+                    IncomingRecord = incomingRecord
+                });
+
+            return true;
+        }
+
+        protected string SanitizeRawData(string rawData)
+        {
+            var sanitizedData = String.Join(Environment.NewLine, (
+                from line in rawData.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries)
+                where !line.StartsWith("#")
+                select line
+            )); // Can't .Trim() as it will break the FileHelpers parsing...
+
+            return sanitizedData;
+        }
     }
 }
 

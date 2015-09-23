@@ -1,10 +1,10 @@
-//  _    _ _    ___    _  ___ _ _   _        
+﻿//  _    _ _    ___    _  ___ _ _   _        
 // | |  (_) |__| _ \_ | |/ __(_) |_(_)___ ___
 // | |__| | '_ \   / || | (__| |  _| / -_|_-<
 // |____|_|_.__/_|_\\__(_)___|_|\__|_\___/__/
 //
 // Author:
-//   Arthur Lucas <arthur@remitjet.com>
+//   arthur <>
 //
 // Copyright (c) 2015, Remit Jet, Ltd. All rights reserved.
 //
@@ -29,30 +29,66 @@
 // LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+//
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
 
-namespace LibRJ.Cities.Models
+namespace LibRJ.Cities.GeoNames.SourceModels
 {
-    public class City : GeoNameResource
+    public class CountryFeature
     {
-        public int ID { get; set; }
+        public int GeoNameID { get; set; }
 
         [StringLength(200)]
         public string Name { get; set; }
 
         [StringLength(200)]
-        public string DisplayName { get; set; }
+        public string AsciiName { get; set; }
+
+        [StringLength(10000)]
+        public string AlternateNames { get; set; }
 
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
 
-        public UInt32 Population { get; set; }
+        [StringLength(1)]
+        public string FeatureClass { get; set; }
 
-        public int RegionID { get; set; }
-	}
+        [StringLength(10)]
+        public string FeatureCode { get; set; }
 
+        [StringLength(2)]
+        public string CountryCode { get; set; }
+
+        [StringLength(200)]
+        public string CountryCodeAlt { get; set; }
+
+        [StringLength(20)]
+        public string Admin1Code { get; set; }
+
+        [StringLength(80)]
+        public string Admin2Code { get; set; }
+
+        [StringLength(20)]
+        public string Admin3Code { get; set; }
+
+        [StringLength(20)]
+        public string Admin4Code { get; set; }
+
+        //        population        : bigint (8 byte int) 
+        //        elevation         : in meters, integer
+        //        dem               : digital elevation model, srtm3 or gtopo30, average elevation of 3''x3'' (ca 90mx90m) or 30''x30'' (ca 900mx900m) area in meters, integer. srtm processed by cgiar/ciat.
+        //        timezone          : the timezone id (see file timeZone.txt) varchar(40)
+        //        modification date : 
+
+        public long? Population { get; set; }
+        public int? Elevation { get; set; }     // meters
+        public int? ElevationDEM { get; set; }  // digital elevation model, meters
+
+        [StringLength(40)]
+        public string TimeZone { get; set; }
+
+        [StringLength(10)]
+        public string ModificationDate { get; set; }    // date of last modification in yyyy-MM-dd format
+    }
 }
 

@@ -31,6 +31,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using BaseWebClient = System.Net.WebClient;
 
@@ -39,7 +40,7 @@ namespace LibRJ.Cities.GeoNames
     public interface IWebClient : IDisposable
     {
         // List all members from `System.Net.WebClient` that we need.
-        Task<byte[]> DownloadDataTaskAsync(Uri address);
+        Task<string> DownloadStringTaskAsync(Uri address);
     }
 
     public interface IWebClientFactory
@@ -50,7 +51,7 @@ namespace LibRJ.Cities.GeoNames
     public class WebClient : BaseWebClient, IWebClient
     { }
 
-    public class WebClientFactory
+    public class WebClientFactory : IWebClientFactory
     {
         public IWebClient Create()
         {
