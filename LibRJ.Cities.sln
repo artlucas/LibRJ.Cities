@@ -49,6 +49,7 @@ Global
 		$3.scope = text/x-csharp
 		$0.TextStylePolicy = $4
 		$4.FileWidth = 120
+		$4.TabsToSpaces = False
 		$4.EolMarker = Unix
 		$4.inheritsSet = VisualStudio
 		$4.inheritsScope = text/plain
@@ -67,7 +68,7 @@ Global
 		$8.inheritsScope = application/xml
 		$8.scope = application/xml
 		$0.StandardHeader = $9
-		$9.Text = @ _    _ _    ___    _  ___ _ _   _        \n| |  (_) |__| _ \\_ | |/ __(_) |_(_)___ ___\n| |__| | '_ \\   / || | (__| |  _| / -_|_-<\n|____|_|_.__/_|_\\\\__(_)___|_|\\__|_\\___/__/\n\nAuthor:\n  $(AuthorName) <$(AuthorEmail)>\n\nCopyright (c) $(Year), Remit Jet, Ltd. All rights reserved.\n\nRedistribution and use in source and binary forms, with or without modification, are permitted provided that the \nfollowing conditions are met:\n\n   * Redistributions of source code must retain the above copyright notice, this list of conditions and the\n     following disclaimer.\n   * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the\n     following disclaimer in the documentation and/or other materials provided with the distribution.\n   * Neither the name of Remit Jet, Ltd. nor the names of its contributors may be used to endorse or promote\n     products derived from this software without specific prior written permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\nLIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR\nA PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR\nCONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,\nEXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,\nPROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR\nPROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF\nLIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING\nNEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\nSOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
+		$9.Text = @ _    _ _    ___    _  ___ _ _   _        \n| |  (_) |__| _ \\_ | |/ __(_) |_(_)___ ___\n| |__| | '_ \\   / || | (__| |  _| / -_|_-<\n|____|_|_.__/_|_\\\\__(_)___|_|\\__|_\\___/__/\n\nAuthor(s):\n $(AuthorName) <$(AuthorEmail)>\n\nCopyright (c) $(Year) Remit Jet, Ltd.\n\nBy using this software you agree to our software license as detailed in the\nLICENSE.txt file in the root of the repository.  You can also access the\nrepository online at: https://github.com/RemitJet/LibRJ.Cities\n
 		$9.IncludeInNewFiles = True
 		$0.NameConventionPolicy = $10
 		$10.Rules = $11
