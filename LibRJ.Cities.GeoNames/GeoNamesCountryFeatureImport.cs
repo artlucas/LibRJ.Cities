@@ -3,39 +3,24 @@
 // | |__| | '_ \   / || | (__| |  _| / -_|_-<
 // |____|_|_.__/_|_\\__(_)___|_|\__|_\___/__/
 //
-// Author:
-//   arthur <>
+// Author(s):
+//   Arthur Lucas <arthur@remitjet.com>
 //
-// Copyright (c) 2015, Remit Jet, Ltd. All rights reserved.
+// Copyright (c) 2015 Remit Jet, Ltd.
 //
-// Redistribution and use in source and binary forms, with or without modification, are permitted provided that the 
-// following conditions are met:
-//
-//    * Redistributions of source code must retain the above copyright notice, this list of conditions and the
-//      following disclaimer.
-//    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
-//      following disclaimer in the documentation and/or other materials provided with the distribution.
-//    * Neither the name of Remit Jet, Ltd. nor the names of its contributors may be used to endorse or promote
-//      products derived from this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-// LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// By using this software you agree to our software license as detailed in the
+// LICENSE.txt file in the root of the repository.  You can also view this file
+// online at: https://github.com/RemitJet/LibRJ.Cities
 //
 using System;
-using System.Linq;
-using FileHelpers;
 using System.Configuration;
-using LibRJ.Cities.Models;
+using System.IO.Compression;
+using System.Linq;
 using System.Data.Entity;
+using System.Threading.Tasks;
+using System.IO;
+using FileHelpers;
+using DestModels = LibRJ.Cities.Models;
 
 namespace LibRJ.Cities.GeoNames
 {
@@ -43,13 +28,13 @@ namespace LibRJ.Cities.GeoNames
     {
         public const string DefaultImportURL = "http://download.geonames.org/export/dump/$$.zip";
 
-        private FileHelperEngine<SourceModels.Country> engine;
+        private FileHelperEngine<SourceModels.CountryFeature> engine;
         private IWebClientFactory webClientFactory;
         private Uri importURL;
 
         public GeoNamesCountryFeatureImport(IWebClientFactory webClientFactory=null, Uri importURL=null)
         {
-            this.engine = new FileHelperEngine<SourceModels.Country>();
+            this.engine = new FileHelperEngine<SourceModels.CountryFeature>();
 
             this.importURL = importURL ?? new Uri(
                 ConfigurationManager.AppSettings["GeoNamesCountryFeatureImport:ImportURI"]
@@ -59,30 +44,73 @@ namespace LibRJ.Cities.GeoNames
             this.webClientFactory = webClientFactory ?? (IWebClientFactory)new WebClientFactory();
         }
 
-        public Region TranslateToRegion(SourceModels.CountryFeature source, Country country)
+        protected async Task<bool> IsNewRegion(IDbSet<DestModels.Region> regionSet, SourceModels.CountryFeature feature)
         {
-            if (source.FeatureCode != "ADM1")
-                return null;
-            
-            var record = new Region();
-
-            record.Name = source.Name;
-            record.CountryID = country.ID;
-
-            return record;
+            bool isNew = (
+                await regionSet.Where(x =>
+                    (feature.GeoNameID != null && x.GeoNameID == feature.GeoNameID)
+                ).CountAsync() > 0
+            );
+            return isNew;
         }
 
-        public Region TranslateToCity(SourceModels.CountryFeature source, Region region)
+        protected async Task<bool> IsNewCity(IDbSet<DestModels.City> citySet, SourceModels.CountryFeature feature)
         {
-            if (source.FeatureCode != "PPL")
-                return null;
+            bool isNew = (
+                await citySet.Where(x => 
+                    (feature.GeoNameID != null && x.GeoNameID == feature.GeoNameID)
+                ).CountAsync() > 0
+            );
+            return isNew;
+        }
 
-            var record = new City();
+        protected async Task<string> GetSourceData(string countryIsoA2)
+        {
+            var countryImportUrl = new Uri(this.importURL.ToString().Replace("$$", countryIsoA2));
+            var webClient = this.webClientFactory.Create();
+            var responseStream = await webClient.OpenReadTaskAsync(countryImportUrl);
+            var zipArchive = new ZipArchive(responseStream, ZipArchiveMode.Read);
+            var dataEntry = zipArchive.GetEntry(countryIsoA2 + ".txt");
+            var responseData = await new StreamReader(dataEntry.Open()).ReadToEndAsync();
+            responseData = this.SanitizeRawData(responseData);
 
-            record.Name = source.Name;
-            record.CountryID = country.ID;
+            return responseData;
+        }
 
-            return record;
+        public async Task<int> SyncRegions(IDbSet<DestModels.Region> regionSet, DestModels.Country parent)
+        {
+            SourceModels.CountryFeature[] countryFeatures = null;
+
+            try
+            {
+                var responseData = await this.GetSourceData(parent.ISO_A2);
+                countryFeatures = this.engine.ReadString(responseData);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            int newRecordsCount = 0;
+
+            foreach (var feature in countryFeatures)
+            {
+                if (!feature.IsRegion)
+                    continue;
+                
+                bool isNew = await this.IsNewRegion(regionSet, feature);
+                bool shouldImport = this.OnImporting(isNew, GeoNames.GeoNamesRecordType.Region, feature);
+
+                if (isNew && shouldImport)
+                {
+                    var newRecord = feature.ToRegion(parent);
+                    regionSet.Add(newRecord);
+                    Console.WriteLine("Added: " + newRecord.Name + ", " + feature.CountryCode);
+                    newRecordsCount += 1;
+                }
+            }
+
+            return newRecordsCount;
         }
     }
 }

@@ -3,32 +3,14 @@
 // | |__| | '_ \   / || | (__| |  _| / -_|_-<
 // |____|_|_.__/_|_\\__(_)___|_|\__|_\___/__/
 //
-// Author:
+// Author(s):
 //   Arthur Lucas <arthur@remitjet.com>
 //
-// Copyright (c) 2015, Remit Jet, Ltd. All rights reserved.
+// Copyright (c) 2015 Remit Jet, Ltd.
 //
-// Redistribution and use in source and binary forms, with or without modification, are permitted provided that the 
-// following conditions are met:
-//
-//    * Redistributions of source code must retain the above copyright notice, this list of conditions and the
-//      following disclaimer.
-//    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
-//      following disclaimer in the documentation and/or other materials provided with the distribution.
-//    * Neither the name of Remit Jet, Ltd. nor the names of its contributors may be used to endorse or promote
-//      products derived from this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-// LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// By using this software you agree to our software license as detailed in the
+// LICENSE.txt file in the root of the repository.  You can also view this file
+// online at: https://github.com/RemitJet/LibRJ.Cities
 //
 using System;
 using System.Configuration;
@@ -62,30 +44,12 @@ namespace LibRJ.Cities.GeoNames
             this.webClientFactory = webClientFactory ?? (IWebClientFactory)new WebClientFactory();
         }
 
-        public Country TranslateCountry(SourceModels.Country sourceCountry)
-        {
-            var newCountry = new Country();
-
-            newCountry.ISO_A2 = sourceCountry.ISO_A2;
-            newCountry.ISO_A3 = sourceCountry.ISO_A3;
-            newCountry.ISO_Numeric = sourceCountry.ISO_Numeric;
-            newCountry.Name = sourceCountry.CountryName;
-            newCountry.Continent = sourceCountry.ContinentCode;
-            newCountry.GeoNameID = sourceCountry.GeoNameID;
-            newCountry.CurrencyCode = sourceCountry.CurrencyCode;   // TODO: add event on each country read?
-            //newCountry.DialingCode = sourceCountry.DialingCode;
-            newCountry.PostalCodeFormat = sourceCountry.PostalCodeFormat;
-            newCountry.PostalCodeRegex = sourceCountry.PostalCodeRegex;
-
-            return newCountry;
-        }
-
         public async Task<int> SyncCountries(IDbSet<Country> countrySet)
         {
             var webClient = this.webClientFactory.Create();
             int newRecordsCount = 0;
 
-            var response = await webClient.DownloadStringTaskAsync(this.countryInfo);
+            var response = await webClient.DownloadStringTaskAsync(this.importURL);
             response = this.SanitizeRawData(response);
 
             SourceModels.Country[] sourceCountries = null;
@@ -114,7 +78,7 @@ namespace LibRJ.Cities.GeoNames
 
                 if (isNew && shouldImport)
                 {
-                    var translatedCountry = this.TranslateCountry(sourceCountry);
+                    var translatedCountry = sourceCountry.ToCountry();
                     countrySet.Add(translatedCountry);
                     Console.WriteLine("Added: " + translatedCountry.Name);
                     newRecordsCount += 1;
