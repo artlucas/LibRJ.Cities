@@ -10,7 +10,7 @@
 //
 // By using this software you agree to our software license as detailed in the
 // LICENSE.txt file in the root of the repository.  You can also view this file
-// online at: https://github.com/RemitJet/LibRJ.Cities
+// online at: https://github.com/RemitJet/LibRJ.Cities/blob/master/LICENSE.txt
 //
 using System;
 using System.Collections.Generic;

@@ -48,13 +48,13 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SourceModels\Country.cs" />
-    <Compile Include="WebClient.cs" />
-    <Compile Include="GeoNamesCountryImport.cs" />
-    <Compile Include="Events.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="GeoNamesImportBase.cs" />
-    <Compile Include="GeoNamesCountryFeatureImport.cs" />
     <Compile Include="SourceModels\CountryFeature.cs" />
+    <Compile Include="RegionImport.cs" />
+    <Compile Include="CountryImport.cs" />
+    <Compile Include="Retrievers\WebClient.cs" />
+    <Compile Include="Retrievers\CountryFeatureRetriever.cs" />
+    <Compile Include="Retrievers\CountryRetriever.cs" />
+    <Compile Include="CityImport.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -71,6 +71,7 @@
   </ProjectExtensions>
   <ItemGroup>
     <Folder Include="SourceModels\" />
+    <Folder Include="Retrievers\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

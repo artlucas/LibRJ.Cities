@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test01", "test01\test01.csproj", "{2491D8E5-FCBB-4A4D-8A05-49755FFE1FB7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibRJ.Cities.Tests", "LibRJ.Cities.Tests\LibRJ.Cities.Tests.csproj", "{0FEFDD63-C069-43BB-B509-B0BBBC1837B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +19,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0FEFDD63-C069-43BB-B509-B0BBBC1837B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FEFDD63-C069-43BB-B509-B0BBBC1837B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FEFDD63-C069-43BB-B509-B0BBBC1837B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FEFDD63-C069-43BB-B509-B0BBBC1837B4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{157A5C52-223D-4088-AADF-B1C04DDE5064}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{157A5C52-223D-4088-AADF-B1C04DDE5064}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{157A5C52-223D-4088-AADF-B1C04DDE5064}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{157A5C52-223D-4088-AADF-B1C04DDE5064}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2491D8E5-FCBB-4A4D-8A05-49755FFE1FB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2491D8E5-FCBB-4A4D-8A05-49755FFE1FB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2491D8E5-FCBB-4A4D-8A05-49755FFE1FB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2491D8E5-FCBB-4A4D-8A05-49755FFE1FB7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C6F6F7FF-5187-4CCE-A3DF-97F1C26C6169}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C6F6F7FF-5187-4CCE-A3DF-97F1C26C6169}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6F6F7FF-5187-4CCE-A3DF-97F1C26C6169}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -68,7 +68,7 @@ Global
 		$8.inheritsScope = application/xml
 		$8.scope = application/xml
 		$0.StandardHeader = $9
-		$9.Text = @ _    _ _    ___    _  ___ _ _   _        \n| |  (_) |__| _ \\_ | |/ __(_) |_(_)___ ___\n| |__| | '_ \\   / || | (__| |  _| / -_|_-<\n|____|_|_.__/_|_\\\\__(_)___|_|\\__|_\\___/__/\n\nAuthor(s):\n $(AuthorName) <$(AuthorEmail)>\n\nCopyright (c) $(Year) Remit Jet, Ltd.\n\nBy using this software you agree to our software license as detailed in the\nLICENSE.txt file in the root of the repository.  You can also access the\nrepository online at: https://github.com/RemitJet/LibRJ.Cities\n
+		$9.Text = @ _    _ _    ___    _  ___ _ _   _        \n| |  (_) |__| _ \\_ | |/ __(_) |_(_)___ ___\n| |__| | '_ \\   / || | (__| |  _| / -_|_-<\n|____|_|_.__/_|_\\\\__(_)___|_|\\__|_\\___/__/\n\nAuthor(s):\n $(AuthorName) <$(AuthorEmail)>\n\nCopyright (c) $(Year) Remit Jet, Ltd.\n\nBy using this software you agree to our software license as detailed in the\nLICENSE.txt file in the root of the repository.  You can also view this file\nonline at: https://github.com/RemitJet/LibRJ.Cities/blob/master/LICENSE.txt\n
 		$9.IncludeInNewFiles = True
 		$0.NameConventionPolicy = $10
 		$10.Rules = $11

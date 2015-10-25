@@ -10,14 +10,16 @@
 //
 // By using this software you agree to our software license as detailed in the
 // LICENSE.txt file in the root of the repository.  You can also view this file
-// online at: https://github.com/RemitJet/LibRJ.Cities
+// online at: https://github.com/RemitJet/LibRJ.Cities/blob/master/LICENSE.txt
 //
 using System;
 using System.ComponentModel.DataAnnotations;
+using FileHelpers;
 using DestModels = LibRJ.Cities.Models;
 
 namespace LibRJ.Cities.GeoNames.SourceModels
 {
+    [DelimitedRecord("\t")]
     public class CountryFeature
     {
         public int GeoNameID { get; set; }
@@ -82,32 +84,12 @@ namespace LibRJ.Cities.GeoNames.SourceModels
             }
         }
 
-        public DestModels.Region ToRegion(DestModels.Country parent)
-        {
-            if (!this.IsRegion)
-                return null;
-
-            var record = new DestModels.Region();
-
-            record.Name = this.Name;
-            record.CountryID = parent.ID;
-
-            return record;
-        } 
-
         public DestModels.City ToCity(DestModels.Region parent)
         {
             if (!this.IsCity)
                 return null;
 
             var record = new DestModels.City();
-
-            record.Name = this.AsciiName;
-            record.DisplayName = this.Name;
-            record.RegionID = parent.ID;
-            record.Latitude = this.Latitude;
-            record.Longitude = this.Longitude;
-            record.Population = (uint)this.Population;
 
             return record;
         }

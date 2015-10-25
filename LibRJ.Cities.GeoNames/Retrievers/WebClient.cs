@@ -10,20 +10,20 @@
 //
 // By using this software you agree to our software license as detailed in the
 // LICENSE.txt file in the root of the repository.  You can also view this file
-// online at: https://github.com/RemitJet/LibRJ.Cities
+// online at: https://github.com/RemitJet/LibRJ.Cities/blob/master/LICENSE.txt
 //
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using BaseWebClient = System.Net.WebClient;
 
-namespace LibRJ.Cities.GeoNames
+namespace LibRJ.Cities.GeoNames.Retrievers
 {
     public interface IWebClient : IDisposable
     {
         // List all members from `System.Net.WebClient` that we need.
         Task<string> DownloadStringTaskAsync(Uri address);
-        Task<Stream> OpenReadTaskAsync(Uri address);
+        Task<byte[]> DownloadDataTaskAsync(Uri address);
     }
 
     public interface IWebClientFactory

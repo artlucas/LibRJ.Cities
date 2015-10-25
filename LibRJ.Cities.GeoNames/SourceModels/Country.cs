@@ -10,7 +10,7 @@
 //
 // By using this software you agree to our software license as detailed in the
 // LICENSE.txt file in the root of the repository.  You can also view this file
-// online at: https://github.com/RemitJet/LibRJ.Cities
+// online at: https://github.com/RemitJet/LibRJ.Cities/blob/master/LICENSE.txt
 //
 using System;
 using FileHelpers;
@@ -58,23 +58,6 @@ namespace LibRJ.Cities.GeoNames.SourceModels
         public string Neighbours_A2 { get; set; }
 
         public string EquivalentFipsCode { get; set; }
-
-        public DestModels.Country ToCountry()
-        {
-            var newRecord = new DestModels.Country()
-            {
-                    Name = this.CountryName,
-                    Continent = this.ContinentCode,
-                    CurrencyCode = this.CurrencyCode,
-                    GeoNameID = this.GeoNameID,
-                    ISO_A2 = this.ISO_A2,
-                    ISO_A3 = this.ISO_A3,
-                    ISO_Numeric = this.ISO_Numeric,
-                    PostalCodeFormat = this.PostalCodeFormat,
-                    PostalCodeRegex = this.PostalCodeRegex
-            };
-            return newRecord;
-        }
     }
 }
 
